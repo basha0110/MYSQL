@@ -1,0 +1,25 @@
+1. Create a calendar table 
+CREATE TABLE `calendar` (
+`cdate` date NOT NULL DEFAULT '2000-01-01',
+`cday` int(2) unsigned NOT NULL DEFAULT '1',
+`cmonth` int(2) unsigned NOT NULL DEFAULT '1',
+`cyear` int(4) unsigned NOT NULL DEFAULT '2000',
+PRIMARY KEY (`cdate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+2. Create an auxiliary table ints (0-9)
+CREATE TABLE ints (i INTEGER);
+INSERT INTO ints VALUES (0), (1), (2), (3), (4), (5), (6), (7), (8), (9);
+
+3. Fill your calendar with dates from 01-01-2005 until 31-12-2030
+
+INSERT INTO calendar (cdate, cday, cmonth, cyear)
+SELECT cal.date as cdate, DAY(cal.date) as cday, MONTH(cal.date) as cmonth, YEAR(cal.date) as cyear
+FROM (
+SELECT '2005-01-01' + INTERVAL d.i*1000 + c.i* 100 + a.i * 10 + b.i DAY as date
+FROM ints a JOIN ints b JOIN ints c JOIN ints d
+ORDER BY d.i*1000 + c.i*100 + a.i*10 + b.i) cal
+WHERE cal.date BETWEEN '2005-01-01' AND '2030-12-31'
+
+Note: The above fourth join generates up to 10000 dates. In case you need more dates, add extra joints of the table 'ints'
