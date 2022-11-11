@@ -1,0 +1,6 @@
+MYSQL_CONN="-uroot -ppassword"
+mysql ${MYSQL_CONN} --skip-column-names -A -e"SELECT CONCAT('SHOW GRANTS FOR ''',user,'''@''',host,''';') FROM mysql.user WHERE user<>''" | mysql ${MYSQL_CONN} --skip-column-names -A | sed 's/$/;/g' > MySQLUserGrants.sql
+
+
+Tested:
+sudo mysql -u root -p'' --skip-column-names -A -e"SELECT CONCAT('SHOW GRANTS FOR ''',user,'''@''',host,''';') FROM mysql.user WHERE user<>''" | sudo mysql -u root -p'' --skip-column-names -A | sed 's/$/;/g' > MySQLUserGrants.sql
